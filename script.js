@@ -23,6 +23,8 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
         return;
     }
 
+    // Check if "vartala" is valid
+
     // Extract the components for the date of birth
     const dobDigits = ssn.substr(0, 6);
     const yearPrefix = ssn.charAt(9) === "9" ? "19" : "20"; // Check the last digit
