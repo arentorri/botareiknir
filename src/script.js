@@ -148,6 +148,14 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
     const wageIndex3YearBeforeClaim = parseFloat(document.getElementById('wageIndex3YearsBeforeClaim').value) || 0;
     const disabilityLevel = parseFloat(document.getElementById('disabilityLevel').value) || 0;
 
+    // Calculate age at the time of the accident
+    const birthDate = new Date(year, month - 1, day); // Construct birthDate from dob components
+    const accidentDate = new Date(accidentYear, accidentMonth - 1, accidentDay); // Construct accidentDate from accidentDate components
+    const ageAtAccident = calculateAgeAtDate(birthDate, accidentDate);
+
+    // Calculate the margfeldisstuðull for the age at the time of the accident
+    const margfeldisstudull = calculateMargfeldisstudull(ageAtAccident); // Pass the ageAtAccident object
+
     let permanentDisabilityResults = '';
     if (varanlegOrorkaCheckbox) {
 
@@ -184,14 +192,6 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
             medaltalOgLifeyrir = hamarkBotagrundvollurUppreiknadur
         }
 
-        // Calculate age at the time of the accident
-        const birthDate = new Date(year, month - 1, day); // Construct birthDate from dob components
-        const accidentDate = new Date(accidentYear, accidentMonth - 1, accidentDay); // Construct accidentDate from accidentDate components
-        const ageAtAccident = calculateAgeAtDate(birthDate, accidentDate);
-
-        // Calculate the margfeldisstuðull for the age at the time of the accident
-        const margfeldisstudull = calculateMargfeldisstudull(ageAtAccident); // Pass the ageAtAccident object
-
         // Bótakrafa varanlegrar örorku fyrir frádrátt
         const heildaraKrafaFyrirFradratt = margfeldisstudull * (disabilityLevel / 100) * medaltalOgLifeyrir
 
@@ -210,7 +210,6 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
             <p><strong>Tekjur 2 ár fyrir tjón, uppreiknaðar:</strong> ${tekjur2ArFyrirUppreiknad}</p>
             <p><strong>Tekjur 3 ár fyrir tjón, uppreiknaðar:</strong> ${tekjur3ArFyrirUppreiknad}</p>
             <p><strong>Meðaltal tekna:</strong> ${medaltalTekna}</p>
-            <p><strong>Margfeldisstuðull:</strong> ${margfeldisstudull}</p>
             <p><strong>Lífeyrismótframlag vinnuveitanda:</strong> ${lifeyrismotframlagVinnuveitanda}</p>
             <P><strong>Árslaunaviðmið </strong>(Meðaltal tekna + lífeyrismótframlag): ${medaltalOgLifeyrir}</p>
             <p><strong>Örorka:</strong> ${disabilityLevel}</p>
