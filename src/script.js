@@ -131,8 +131,7 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
             <h3>Varanlegur miski</h3>
             <p><strong>Miskastig:</strong> ${permanentLossLevel}%</p>
             <p><strong>Aldur tjónþola á tjóndegi:</strong> ${ageAtAccident.years} ára og ${ageAtAccident.days} daga</p>
-            <p><strong>Miskabótagrundvöllur:</strong> ${miskabotValue}</p>
-            <p><strong>Miskabótagrundvöllur uppreiknaður, sbr. 15. gr. skbl.:</strong> ${miskabotUppreiknadur}</p>
+            <p><strong>Miskabótagrundvöllur m.v. aldur tjónþola á tjóndegi:</strong> ${miskabotValue}</p>
             <p><strong>Miskabótagrundvöllur uppreiknaður og námundaður, sbr. 1. mgr. 15. gr. skbl.:</strong> ${miskabotUppreiknadurNamundadur.toFixed(0)}</p>
             <p><strong>Heildarbótakrafa fyrir tímabundið atvinnutjón:</strong> ${heildarkrafaBotaVegnaVaranlegsMiska}</p>
         `;
