@@ -199,6 +199,7 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
             <p><strong>Tekjur 2 ár fyrir tjón, uppreiknaðar:</strong> ${tekjur2ArFyrirUppreiknad}</p>
             <p><strong>Tekjur 3 ár fyrir tjón, uppreiknaðar:</strong> ${tekjur3ArFyrirUppreiknad}</p>
             <p><strong>Meðaltal tekna:</strong> ${medaltalTekna}</p>
+            <p><strong>Margfeldisstuðull:</strong> ${margfeldisstudull}</p>
             <p><strong>Lífeyrismótframlag vinnuveitanda:</strong> ${lifeyrismotframlagVinnuveitanda}</p>
             <P><strong>Árslaunaviðmið </strong>(Meðaltal tekna + lífeyrismótframlag): ${medaltalOgLifeyrir}</p>
             <p><strong>Örorka:</strong> ${disabilityLevel}</p>
