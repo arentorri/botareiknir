@@ -107,7 +107,6 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
             <p><strong>Heildarbótakrafa fyrir tímabundið atvinnutjón:</strong> ${totalCompensationAfterBenefits}</p>
         `;
     }
-
     
     // Varanlegur miski calculation
     let permanentLossResults = '';
@@ -117,7 +116,7 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
         const ageAtAccident = calculateAgeAtDate(birthDate, accidentDate);
 
         const permanentLossLevel = parseFloat(document.getElementById('permanentLossLevel').value) || 0;
-        const miskabotValue = calculateMiskabotValue(ageAtAccident.years);
+        const miskabotValue = calculateMiskabotValue(ageAtAccident);
 
         // Calculate Miskabótagrundvöllur uppreiknaður sbr. 15. gr. skbl.
         const miskabotUppreiknadur = Math.round(miskabotValue * (loanInterestRate / 3282));
@@ -127,7 +126,6 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
 
         // Calculate Heildarkrafa bóta vegna varanlegs miska
         const heildarkrafaBotaVegnaVaranlegsMiska = Math.round((permanentLossLevel / 100) * miskabotUppreiknadurNamundadur);
-
 
         permanentLossResults = `
             <h3>Varanlegur miski</h3>
@@ -140,10 +138,7 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
         `;
     }
 
-
-    //Varanleg örorka
-
-    
+    //Varanleg örorka    
     const incomeBefore1Year = parseFloat(document.getElementById('incomeBefore1Year').value) || 0;
     const incomeBefore2Year = parseFloat(document.getElementById('incomeBefore2Years').value) || 0;
     const incomeBefore3Year = parseFloat(document.getElementById('incomeBefore3Years').value) || 0;
@@ -244,8 +239,6 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
     calculatorScreen.appendChild(resultDiv);
 });
 
-
-
 function calculateAgeAtDate(birthDate, accidentDate) {
     const birthYear = birthDate.getFullYear();
     const birthMonth = birthDate.getMonth();
@@ -269,19 +262,7 @@ function calculateAgeAtDate(birthDate, accidentDate) {
     }
     
     return { years: ageYears, days: ageDays };
-    //Q: What does this function do?
-    //A: It calculates the age of the client at the time of the accident
-    //Q: give me an example of input and output
-    //A: input: birthDate = 1990-01-01, accidentDate = 2020-01-01
-    //A: output: ageYears = 30, ageDays = 0
-    //Q: If the input is birthDate = 2002-06-17, accidentDate = 2023-08-23, what is the output?
-
-
 }
-
-
-
-
 
 function calculateMiskabotValue(age) {
     // Define the mapping of age to Miskabótagrundvöllur
@@ -318,30 +299,33 @@ function calculateMiskabotValue(age) {
         100: 3000000,
     };
 
-    if (age < 0 || age > 150) {
+    if (age.years < 0 || age.years > 150) {
         return "Invalid age"; // Handle out-of-range age
-    } else if (age < 50) {
-        return 4000000;
-    } else if (age >= 74) {
-        return 3000000;
-    } else if (ageMiskabotMapping[age]) {
-        return ageMiskabotMapping[age];
-    } else {
-        // Calculate interpolated Miskabótagrundvöllur
-        const lowerAge = Math.floor(age);
-        const upperAge = Math.ceil(age);
-        const lowerMiskabot = ageMiskabotMapping[lowerAge];
-        const upperMiskabot = ageMiskabotMapping[upperAge];
-        const fraction = age - lowerAge;
-        return lowerMiskabot + (upperMiskabot - lowerMiskabot) * fraction;
     }
+    if (age.years < 50) {
+        return 4000000;
+    } 
+    if (age.years >= 74) {
+        return 3000000;
+    }
+
+    // Calculate interpolated Miskabótagrundvöllur
+    var fractionalDifference = age.days / 365;
+    // Use decimal calculation and round to three decimal points
+    return Math.round((ageMiskabotMapping[age.years] * fractionalDifference + 
+        ageMiskabotMapping[age.years + 1] * (1 - fractionalDifference)) * 500) / 500;
 }
 
 // Function to calculate the margfeldisstuðull
 function calculateMargfeldisstudull(age) {
     // Given age coefficients data
     var ageCoefficients = {
-        0: 11.438, 1: 11.746, 2: 12.064, 3: 12.389, 4: 12.724, 5: 13.067,
+        0: 11.438,
+        1: 11.746,
+        2: 12.064,
+        3: 12.389,
+        4: 12.724,
+        5: 13.067,
         6: 13.42,
         7: 13.782,
         8: 14.155,
@@ -410,27 +394,20 @@ function calculateMargfeldisstudull(age) {
         71:	1.626,
         72:	1.412,
         73:	1.109,
+        74: 0.667
     };
 
-    // Find the two nearest ages that surround the given age
-    var ageValues = Object.keys(ageCoefficients).map(Number);
-    var closestAges = ageValues.sort(function(a, b) {
-        return Math.abs(a - age) - Math.abs(b - age);
-    }).slice(0, 2);
-    var age1 = age;
-    var age2 = age;
+    // If 74 or older 0.667 is to be used
+    if (age.years >= 74) {
+        // use 0.667
+        return 0.667
+    }
 
     // Find the margfeldisstuðull values corresponding to the two nearest ages
-    var marg1 = ageCoefficients[age1];
-    var marg2 = ageCoefficients[age2];
-
     // Calculate the fractional difference between the two nearest ages
-    var fractionalDifference = 0;
+    var fractionalDifference = age.days / 365;
 
-    // Calculate the value using linear interpolation
-    var margfeldisstudull = marg1 + (marg2 - marg1) * fractionalDifference;
-
-
-    return margfeldisstudull;
+    // Use decimal calculation and round to three decimal points
+    return Math.round((ageCoefficients[age.years] * fractionalDifference + 
+                       ageCoefficients[age.years + 1] * (1 - fractionalDifference) + Number.EPSILON) * 1000) / 1000;
 }
-
