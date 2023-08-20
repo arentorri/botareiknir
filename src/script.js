@@ -177,12 +177,23 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
         const lifeyrismotframlagVinnuveitanda = Math.round(medaltalTekna * (115 / 1000));
 
         // Meðaltal tekna + lífeyrismótframlag vinnuveitanda:
-        const medaltalOgLifeyrir = medaltalTekna + lifeyrismotframlagVinnuveitanda;
+        let medaltalOgLifeyrir = medaltalTekna + lifeyrismotframlagVinnuveitanda;
+        if (medaltalOgLifeyrir < lagmarkBotagrundvollurUppreiknadur) {
+            medaltalOgLifeyrir = lagmarkBotagrundvollurUppreiknadur
+        } else if (medaltalOgLifeyrir > hamarkBotagrundvollurUppreiknadur) {
+            medaltalOgLifeyrir = hamarkBotagrundvollurUppreiknadur
+        }
 
-        // Margfeldisstuðull:
+        // Calculate age at the time of the accident
+        const birthDate = new Date(year, month - 1, day); // Construct birthDate from dob components
+        const accidentDate = new Date(accidentYear, accidentMonth - 1, accidentDay); // Construct accidentDate from accidentDate components
+        const ageAtAccident = calculateAgeAtDate(birthDate, accidentDate);
+
+        // Calculate the margfeldisstuðull for the age at the time of the accident
+        const margfeldisstudull = calculateMargfeldisstudull(ageAtAccident); // Pass the ageAtAccident object
 
         // Bótakrafa varanlegrar örorku fyrir frádrátt
-
+        const heildaraKrafaFyrirFradratt = margfeldisstudull * (disabilityLevel / 100) * medaltalOgLifeyrir
 
         // Eingreiddar örorkubætur almannatrygginga
         // Bætur frá slysatryggingum samkvæmt umferðarlögum
@@ -203,20 +214,11 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
             <p><strong>Lífeyrismótframlag vinnuveitanda:</strong> ${lifeyrismotframlagVinnuveitanda}</p>
             <P><strong>Árslaunaviðmið </strong>(Meðaltal tekna + lífeyrismótframlag): ${medaltalOgLifeyrir}</p>
             <p><strong>Örorka:</strong> ${disabilityLevel}</p>
-
+            <p><strong>Heildarkrafa fyrir varanlega Örorku fyrir frádrátt</strong> ${heildaraKrafaFyrirFradratt}
 
         `;
     }
 
-    // Calculate age at the time of the accident
-    const birthDate = new Date(year, month - 1, day); // Construct birthDate from dob components
-    const accidentDate = new Date(accidentYear, accidentMonth - 1, accidentDay); // Construct accidentDate from accidentDate components
-    const ageAtAccident = calculateAgeAtDate(birthDate, accidentDate);
-
-    // Calculate the margfeldisstuðull for the age at the time of the accident
-    const margfeldisstudull = calculateMargfeldisstudull(ageAtAccident); // Pass the ageAtAccident object
-
-        
     // Update DOM to display results
     const resultDiv = document.createElement('div');
     resultDiv.innerHTML = `
