@@ -218,8 +218,17 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
         // Bætur samkvæmt lögum um sjúklingatryggingu
         // 40% af eingreiðsluverðmæti örorkulífeyris frá lífeyrissjóði
 
-        results = {...results, permanentDisabilityResults: permanentDisabilityResults {
-            
+        results = {...results, permanentDisabilityResults: {
+            lagmarkBotagrundvollurUppreiknadur: lagmarkBotagrundvollurUppreiknadur,
+            hamarkBotagrundvollurUppreiknadur: hamarkBotagrundvollurUppreiknadur,
+            tekjur1ArFyrirUppreiknad: tekjur1ArFyrirUppreiknad,
+            tekjur2ArFyrirUppreiknad: tekjur2ArFyrirUppreiknad,
+            tekjur3ArFyrirUppreiknad: tekjur3ArFyrirUppreiknad,
+            medaltalTekna: medaltalTekna,
+            lifeyrismotframlagVinnuveitanda: lifeyrismotframlagVinnuveitanda,
+            medaltalOgLifeyrir: medaltalOgLifeyrir,
+            disabilityLevel: disabilityLevel,
+            heildaraKrafaFyrirFradratt: heildaraKrafaFyrirFradratt
         } };
         permanentDisabilityResults = `
             <h3>Varanleg örorka</h3>
@@ -237,24 +246,17 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
         `;
     }
 
-    // Visualize data
-    const resultsData = `
-        <h2>Niðurstöður</h2>
-        <p><strong>Netfang lögmanns:</strong> ${lawyerEmail}</p>
-        <p><strong>Nafn umbjóðanda:</strong> ${clientName}</p>
-        <p><strong>Kennitala:</strong> ${ssn}</p>
-        <p><strong>Tjóndagur:</strong> ${formattedAccidentDate}</p>
-        <p><strong>Fæðingardagur:</strong> ${formattedDateOfBirth}</p>
-        <p><strong>Margfeldisstuðull:</strong> ${margfeldisstudull}</p>
-        ${compensationResults}
-        ${employmentLossResults}
-        ${permanentLossResults}
-        ${permanentDisabilityResults}
-    `;
+    results = {...results, lawyerEmail: lawyerEmail };
+    results = {...results, clientName: clientName };
+    results = {...results, ssn: ssn };
+    results = {...results, formattedAccidentDate: formattedAccidentDate };
+    results = {...results, formattedDateOfBirth: formattedDateOfBirth };
+    results = {...results, margfeldisstudull: margfeldisstudull };
 
     console.log(results)
+    sessionStorage.setItem("results", JSON.stringify(results));
 
     // Open new window with data
-    // const resultsWindow = window.open("../public/results.html", "_blank");
-    // resultsWindow.focus();
+    const resultsWindow = window.open("../public/results.html", "_blank");
+    resultsWindow.focus();
 });
