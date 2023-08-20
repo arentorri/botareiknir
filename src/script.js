@@ -56,10 +56,10 @@ document.getElementById('calc-form').addEventListener('submit', function (event)
     const sickDaysWithAccommodation = parseInt(document.getElementById('sickDaysWithAccommodation').value) || 0;
     const sickDaysWithoutAccommodation = parseInt(document.getElementById('sickDaysWithoutAccommodation').value) || 0;
     const loanInterestRate = parseFloat(document.getElementById('loanInterestRate').value) || 0;
-    const uppreiknadBeturMeðRúmlegu = Math.round(1300 * (loanInterestRate / 3282))
-    const uppreiknadBeturÁnRúmlegu = Math.round(700 * (loanInterestRate / 3282))
-    const heildarBeturMeðRúmlegu = (uppreiknadBeturMeðRúmlegu * sickDaysWithAccommodation).toFixed(0);
-    const heildarBeturÁnRúmlegu = (uppreiknadBeturÁnRúmlegu * sickDaysWithoutAccommodation).toFixed(0);
+    const uppreiknadBeturMeðRúmlegu = Math.round((1300 * (loanInterestRate / 3282)) /10 ) * 10 
+    const uppreiknadBeturÁnRúmlegu = Math.round((700 * (loanInterestRate / 3282)) / 10) * 10
+    const heildarBeturMeðRúmlegu = uppreiknadBeturMeðRúmlegu * sickDaysWithAccommodation
+    const heildarBeturÁnRúmlegu = uppreiknadBeturÁnRúmlegu * sickDaysWithoutAccommodation
     const heildarBótakrafaFyrirÞjáningabætur = (parseInt(heildarBeturMeðRúmlegu) + parseInt(heildarBeturÁnRúmlegu)).toFixed(0);
 
     let compensationResults = '';
