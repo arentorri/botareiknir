@@ -16,6 +16,7 @@ async function handleSubmit(event) {
     const athugaKennitoluResult = athugaKennitolu(ssn)
     if (athugaKennitoluResult !== "") {
         alert(athugaKennitoluResult)
+        return
     }
 
     // Extract the components for the date of birth
